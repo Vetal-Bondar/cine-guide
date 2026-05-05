@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+body {
+  @apply bg-[#141414] text-white antialiased;
+}
+
+::selection {
+  @apply bg-red-600 text-white;
+}
+@layer utilities {
+  /* Приховуємо скролбар, але залишаємо можливість скролити */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
