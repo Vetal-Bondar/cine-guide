@@ -22,20 +22,12 @@ export default function RootLayout({
     <html lang="uk">
       <body className={inter.className}>
         <Navbar />
-        <div className="pt-20">
-          {children}
-        </div>
-        <Footer/>
-        <FloatingBadge />
-        <body className={inter.className}>
-        <Navbar />
         <div className="pt-20 min-h-screen">
           {children}
         </div>
         <Footer />
         <FloatingBadge />
-        <AIChat /> {/* Ось наш новий ШІ-асистент */}
-      </body>
+        <AIChat />
       </body>
     </html>
   );
