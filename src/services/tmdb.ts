@@ -87,7 +87,7 @@ export const searchMulti = async (query: string) => {
     if (!res.ok) throw new Error("Помилка пошуку");
     const data = await res.json();
     
-    // Фільтруємо: залишаємо тільки фільми (movie) та серіали (tv)
+    // Фільтруємо: залишаємо тільки фільми та серіали
     return data.results.filter((item: any) => item.media_type === "movie" || item.media_type === "tv");
   } catch (error) {
     console.error(error);
