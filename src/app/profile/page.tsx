@@ -29,7 +29,6 @@ export default function ProfilePage() {
       try {
         const promises = likedMovies.map(id => getMovieDetails(id));
         const results = await Promise.all(promises);
-        // Фільтруємо null на випадок помилок API
         setMovies(results.filter(movie => movie !== null));
       } catch (error) {
         console.error("Помилка завантаження фільмів:", error);
@@ -41,7 +40,9 @@ export default function ProfilePage() {
     fetchLikedMovies();
   }, [likedMovies, user, authLoading]);
 
-  // Стан 1: Завантаження
+ //стани:
+
+  // Завантаження
   if (authLoading || isLoading) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
@@ -50,7 +51,7 @@ export default function ProfilePage() {
     );
   }
 
-  // Стан 2: Користувач не авторизований
+  //Користувач не авторизований
   if (!user) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-4">
@@ -61,7 +62,7 @@ export default function ProfilePage() {
     );
   }
 
-  // Стан 3: Авторизований, але порожньо
+  //Авторизований, але порожньо
   if (movies.length === 0) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-4">
@@ -72,7 +73,7 @@ export default function ProfilePage() {
     );
   }
 
-  // Стан 4: Є збережені фільми
+  //Є збережені фільми
   return (
     <main className="min-h-screen pt-8 pb-20 md:pb-8 max-w-[1400px] mx-auto px-4 md:px-8">
       <div className="mb-10">

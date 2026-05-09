@@ -24,7 +24,7 @@ export default function LoginPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 p-8 md:p-10 rounded-3xl shadow-2xl text-center">
         
-        {/* Анімована іконка */}
+        {/**/}
         <div className="flex justify-center mb-6">
           <div className="w-16 h-16 bg-red-600/10 rounded-2xl flex items-center justify-center transform rotate-3 hover:rotate-0 transition-transform duration-300 border border-red-600/20">
             <Film className="w-8 h-8 text-red-600" />
@@ -38,7 +38,7 @@ export default function LoginPage() {
           Увійдіть, щоб зберігати вподобані фільми, проходити тестування настрою та отримувати персональні гібридні рекомендації.
         </p>
         
-        {/* Кнопка Google */}
+        {/**/}
         <button 
           onClick={handleGoogleLogin}
           className="w-full flex items-center justify-center gap-3 bg-white text-black font-bold py-3.5 px-4 rounded-xl hover:bg-gray-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"

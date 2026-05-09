@@ -1,11 +1,11 @@
-"use client"; // Додаємо, бо з'явився стан кліку
+"use client";
 
 import { useState } from "react";
 import { Play } from "lucide-react";
 import MovieModal from "./MovieModal";
 
 interface MovieCardProps {
-  id?: number; // Додали ID фільму
+  id?: number; 
   title: string;
   year: string;
   rating: number;
@@ -35,14 +35,13 @@ export default function MovieCard({ id, title, year, rating, posterPath }: Movie
         </div>
         <div className="p-4 flex-grow flex flex-col justify-between">
           <h3 className="font-bold text-base md:text-lg line-clamp-1 text-white" title={title}>{title}</h3>
-          <div className="flex items-center justify-between mt-2 text-sm text-gray-400">
+          <div className="flex items-center justify-between mt-2 text-sх text-gray-400">
             <span>{year}</span>
             <span className="flex items-center gap-1 text-yellow-500 font-medium">★ {Number(rating).toFixed(1)}</span>
           </div>
         </div>
       </div>
 
-      {/* Якщо клікнули - показуємо модалку, передаючи їй ID фільму */}
       {isModalOpen && id && (
         <MovieModal movieId={id} onClose={() => setIsModalOpen(false)} />
       )}

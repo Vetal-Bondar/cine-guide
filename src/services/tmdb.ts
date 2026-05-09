@@ -77,3 +77,20 @@ export const searchMovies = async (query: string) => {
     return [];
   }
 };
+
+// Пошук фільмів ТА серіалів (Мульти-пошук)
+export const searchMulti = async (query: string) => {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/search/multi?api_key=${API_KEY}&language=uk-UA&query=${encodeURIComponent(query)}&page=1`
+    );
+    if (!res.ok) throw new Error("Помилка пошуку");
+    const data = await res.json();
+    
+    // Фільтруємо: залишаємо тільки фільми (movie) та серіали (tv)
+    return data.results.filter((item: any) => item.media_type === "movie" || item.media_type === "tv");
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};

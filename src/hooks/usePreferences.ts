@@ -9,7 +9,7 @@ export function usePreferences() {
   const { user } = useAuth();
   const [likedMovies, setLikedMovies] = useState<number[]>([]);
 
-  // Завантажуємо лайки, коли користувач заходить на сайт
+  // Завантажуємо лайки коли користувач заходить на сайт
   useEffect(() => {
     if (!user) {
       setLikedMovies([]);
@@ -38,7 +38,7 @@ export function usePreferences() {
     const userRef = doc(db, "users", user.uid);
     const isLiked = likedMovies.includes(movieId);
 
-    // Оновлюємо локальний стан миттєво для швидкості інтерфейсу (Оптимістичний UI)
+    // Оновлюємо локальний стан миттєво для швидкості інтерфейсу
     setLikedMovies(prev => 
       isLiked ? prev.filter(id => id !== movieId) : [...prev, movieId]
     );

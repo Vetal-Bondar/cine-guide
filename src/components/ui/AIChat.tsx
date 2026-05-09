@@ -17,7 +17,6 @@ export default function AIChat() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Автоматичний скрол до нового повідомлення
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
@@ -76,10 +75,10 @@ export default function AIChat() {
 
   return (
     <>
-      {/* Кнопка ШІ: Чітко справа на висоті 100px над кнопкою збережених */}
+
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-[100px] right-6 z-50 p-4 bg-red-600 text-white rounded-full shadow-[0_0_20px_rgba(220,38,38,0.5)] hover:bg-red-700 hover:scale-110 transition-all duration-300 ${isOpen ? "hidden" : "flex"}`}
+        className={`fixed bottom-[140px] right-6 z-50 p-4 bg-red-600 text-white rounded-full shadow-[0_0_20px_rgba(220,38,38,0.5)] hover:bg-red-700 hover:scale-110 transition-all duration-300 ${isOpen ? "hidden" : "flex"}`}
       >
         <Sparkles className="w-6 h-6 animate-pulse" />
       </button>
@@ -92,7 +91,7 @@ export default function AIChat() {
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
             className="fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[380px] h-[500px] max-h-[80vh] bg-[#141414] border border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           >
-            {/* Шапка чату */}
+
             <div className="flex items-center justify-between p-4 bg-zinc-900 border-b border-zinc-800">
               <div className="flex items-center gap-2 text-white font-bold">
                 <Bot className="w-5 h-5 text-red-500" />
@@ -103,7 +102,6 @@ export default function AIChat() {
               </button>
             </div>
 
-            {/* Повідомлення */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
               {messages.length === 0 && (
                 <div className="text-center text-gray-500 mt-8">
@@ -136,7 +134,7 @@ export default function AIChat() {
                 </div>
               ))}
 
-              {/* Анімація завантаження */}
+   
               {isLoading && (
                 <div className="flex gap-3 justify-start">
                   <div className="w-8 h-8 rounded-full bg-red-950/50 border border-red-500/30 flex items-center justify-center flex-shrink-0 mt-1">
@@ -152,7 +150,6 @@ export default function AIChat() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Поле вводу */}
             <form onSubmit={handleSubmit} className="p-3 bg-zinc-900 border-t border-zinc-800 flex gap-2">
               <input
                 value={input}

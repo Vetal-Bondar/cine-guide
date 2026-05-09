@@ -13,7 +13,6 @@ export default function PersonalizedRow() {
 
   useEffect(() => {
     const fetchPersonalized = async () => {
-      // Якщо лайків ще немає - нічого не робимо
       if (!likedMovies || likedMovies.length === 0) {
         setLoading(false);
         return;
@@ -34,7 +33,6 @@ export default function PersonalizedRow() {
 
   return (
     <div className="relative">
-      {/* Неоновий акцент для преміального блоку */}
       <div className="absolute -top-10 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-900/50 to-transparent"></div>
       
       <MovieRow 

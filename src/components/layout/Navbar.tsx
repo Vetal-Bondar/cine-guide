@@ -1,19 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { Search, UserCircle, LogOut, Menu, X, Home, Film, Heart, Info, Sparkles } from "lucide-react";
+import { Search, UserCircle, LogOut, Menu, X, Home, Film, Heart, Info, Sparkles, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { searchMulti } from "@/services/tmdb"; 
+import MovieModal from "@/components/movies/MovieModal"; 
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
+
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0);
@@ -25,7 +34,22 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  // Розширений список меню
+  //ЛОГІКА ЖИВОГО ПОШУКУ
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      const results = await searchMulti(searchQuery);
+      setSearchResults(results.slice(0, 5)); 
+      setIsSearching(false);
+    }, 600); 
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const navLinks = [
     { name: "Головна", href: "/", icon: Home },
     { name: "Каталог", href: "/movies", icon: Film },
@@ -48,24 +72,109 @@ export default function Navbar() {
                 CINEGUIDE
               </Link>
               
-              {/* Десктопне меню */}
               <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-300">
                 {navLinks.map((link) => (
                   <Link 
                     key={link.name} 
                     href={link.href} 
-                    className={`transition hover:text-white flex items-center gap-1.5 ${pathname === link.href ? "text-white font-bold" : ""}`}
+                    className={`relative py-1 transition-colors duration-300 hover:text-white flex items-center gap-1.5 group ${pathname === link.href ? "text-white font-bold" : ""}`}
                   >
                     {link.name}
+                    <span className={`absolute -bottom-1 left-0 w-full h-[2px] bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.9)] transition-all duration-300 ${pathname === link.href ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0 group-hover:opacity-100 group-hover:scale-x-100"}`}></span>
                   </Link>
                 ))}
               </nav>
             </div>
 
             <div className="flex items-center gap-4 md:gap-5">
-              <button className="text-gray-300 hover:text-white transition p-2 bg-zinc-900/50 rounded-full hover:bg-zinc-800">
-                <Search className="w-5 h-5" />
-              </button>
+              
+              <div className="relative">
+                {isSearchOpen ? (
+                  <div className="flex items-center bg-zinc-900 border border-zinc-700 rounded-full px-3 py-2 w-[150px] sm:w-[220px] md:w-[300px] transition-all duration-300">
+                    <Search className="w-4 h-4 text-gray-400 shrink-0" />
+                    <input
+                      autoFocus
+                      type="text"
+                      placeholder="Фільм чи серіал..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="bg-transparent border-none outline-none text-sm text-white w-full ml-2 placeholder:text-zinc-500"
+                    />
+                    <button 
+                      onClick={() => { setIsSearchOpen(false); setSearchQuery(""); }} 
+                      className="text-gray-400 hover:text-white shrink-0 ml-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => setIsSearchOpen(true)}
+                    className="text-gray-300 hover:text-white transition p-2 bg-zinc-900/50 rounded-full hover:bg-zinc-800"
+                  >
+                    <Search className="w-5 h-5" />
+                  </button>
+                )}
+
+                <AnimatePresence>
+                  {isSearchOpen && searchQuery.trim() && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full right-0 mt-3 w-[280px] md:w-[350px] bg-[#141414] border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden z-[70]"
+                    >
+                      {isSearching ? (
+                        <div className="flex justify-center p-6">
+                          <Loader2 className="w-6 h-6 text-red-600 animate-spin" />
+                        </div>
+                      ) : searchResults.length > 0 ? (
+                        <div className="flex flex-col">
+                          {searchResults.map((item) => (
+                            <button
+                              key={item.id}
+                              onClick={() => {
+                                setSelectedMovieId(item.id); 
+                                setIsSearchOpen(false); 
+                                setSearchQuery(""); 
+                              }}
+                              className="flex items-center gap-3 p-3 hover:bg-zinc-900 transition text-left"
+                            >
+                              <img
+                                src={item.poster_path ? `https://image.tmdb.org/t/p/w92${item.poster_path}` : "https://via.placeholder.com/92x138?text=No+Poster"}
+                                alt={item.title || item.name}
+                                className="w-10 h-14 object-cover rounded shrink-0"
+                              />
+                              <div className="flex flex-col flex-1 overflow-hidden">
+                                <span className="text-sm font-bold text-white truncate">{item.title || item.name}</span>
+                                <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                                  <span>{(item.release_date || item.first_air_date)?.substring(0, 4) || "N/A"}</span>
+                                  <span className="text-yellow-500">★ {Number(item.vote_average || 0).toFixed(1)}</span>
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                         
+                          <button
+                            onClick={() => { 
+                              setIsSearchOpen(false); 
+                              setSearchQuery(""); 
+                              router.push('/movies'); 
+                            }}
+                            className="w-full p-3 text-center text-sm text-red-500 hover:bg-zinc-900 transition font-bold border-t border-zinc-800"
+                          >
+                            Більше результатів у Каталозі
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="p-6 text-center text-sm text-gray-400">
+                          Нічого не знайдено. Спробуйте іншу назву.
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
               
               {user ? (
                 <div className="hidden md:flex items-center gap-3">
@@ -82,7 +191,6 @@ export default function Navbar() {
                 </Link>
               )}
 
-              {/* Кнопка Гамбургер (Мобілка) */}
               <button 
                 className="md:hidden text-gray-300 hover:text-white transition p-1"
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -95,7 +203,6 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Мобільне меню (Sidebar) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -133,7 +240,6 @@ export default function Navbar() {
                 </Link>
               )}
 
-              {/* Яскрава кнопка підбору в меню */}
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center gap-2 bg-red-600/20 border border-red-600 text-red-500 hover:bg-red-600 hover:text-white px-4 py-4 rounded-xl font-bold mb-8 transition group shadow-[0_0_15px_rgba(220,38,38,0.2)]">
                 <Sparkles className="w-5 h-5 group-hover:animate-pulse" /> AI Підбір фільму
               </Link>
@@ -160,6 +266,14 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
+
+
+      {selectedMovieId && (
+        <MovieModal 
+          movieId={selectedMovieId} 
+          onClose={() => setSelectedMovieId(null)} 
+        />
+      )}
     </>
   );
 }

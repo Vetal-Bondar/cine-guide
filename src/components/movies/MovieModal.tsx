@@ -41,7 +41,6 @@ export default function MovieModal({ movieId, onClose }: MovieModalProps) {
 
       <div className="w-full max-w-5xl bg-[#141414] rounded-2xl overflow-hidden shadow-2xl border border-zinc-800 flex flex-col md:flex-row max-h-[90vh]">
         
-        {/* Ліва частина: Плеєр (або бекап-картинка) */}
         <div className="w-full md:w-2/3 bg-black aspect-video relative flex items-center justify-center">
           {loading ? (
             <div className="animate-pulse text-zinc-600">Завантаження...</div>
@@ -67,7 +66,6 @@ export default function MovieModal({ movieId, onClose }: MovieModalProps) {
           )}
         </div>
 
-        {/* Права частина: Опис та Кнопки */}
         <div className="w-full md:w-1/3 p-6 md:p-8 flex flex-col overflow-y-auto">
           {loading ? (
             <div className="animate-pulse flex flex-col gap-4">
@@ -91,7 +89,6 @@ export default function MovieModal({ movieId, onClose }: MovieModalProps) {
                 {details?.overview || "Опис українською мовою наразі відсутній."}
               </p>
 
-{/* Кнопки дій */}
               <div className="flex flex-col gap-3 mt-auto">
                 <button 
                   onClick={() => toggleLike(movieId)}
@@ -105,7 +102,6 @@ export default function MovieModal({ movieId, onClose }: MovieModalProps) {
                   {isLiked ? "Збережено в колекцію" : "Вподобати (Лайк)"}
                 </button>
                 
-                {/* Нова кнопка: Дивитися фільм (Google Search) */}
                 <a 
                   href={`https://www.google.com/search?q=${encodeURIComponent(details?.title + ' дивитися онлайн українською')}`}
                   target="_blank"

@@ -120,8 +120,7 @@ export default function RecommendationWizard({ onClose }: { onClose: () => void 
               <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-8 text-center drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]">
                 Ваша персональна <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600 filter drop-shadow-[0_0_20px_rgba(220,38,38,0.8)]">Підбірка</span>
               </h2>
-              
-              {/* Карусель з обробником коліщатка */}
+
               <div 
                 ref={scrollRef}
                 onWheel={(e) => {
@@ -161,7 +160,6 @@ export default function RecommendationWizard({ onClose }: { onClose: () => void 
                 <ChevronLeft className="w-6 h-6 animate-pulse" />
               </button>
               
-              {/* Змінили right-2 на -right-[50px] */}
               <button 
                 onClick={() => handleScroll("right")}
                 className="absolute -right-[70px] top-1/2 -translate-y-1/2 p-3 bg-red-950/40 border border-red-500/50 text-red-500 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.4)] hover:bg-red-600 hover:text-white hover:border-red-500 hover:shadow-[0_0_30px_rgba(220,38,38,0.8)] transition-all duration-300 z-10 active:scale-95"

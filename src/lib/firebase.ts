@@ -12,7 +12,7 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Ініціалізуємо Firebase лише один раз (важливо для Next.js)
+// Ініціалізуємо Firebase лише один раз
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // Експортуємо сервіси авторизації та бази даних

@@ -2,10 +2,10 @@ const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export const getHybridRecommendations = async (answers: any) => {
-  // 1. Беремо конкретний жанр (настрій ігноруємо, це був психологічний гачок)
+  // Беремо конкретний жанр
   const genres = answers.genre || "";
 
-  // 2. Аналізуємо час
+  // Аналізуємо час
   let runtimeParams = "";
   switch (answers.duration) {
     case "short": runtimeParams = "&with_runtime.lte=90"; break;
@@ -13,7 +13,7 @@ export const getHybridRecommendations = async (answers: any) => {
     case "long": runtimeParams = "&with_runtime.gte=120"; break;
   }
 
-  // 3. Аналізуємо епоху
+  // Аналізуємо період випуску фільму
   let dateParams = "";
   switch (answers.era) {
     case "classic": dateParams = "&primary_release_date.lte=1999-12-31"; break;
@@ -27,7 +27,7 @@ export const getHybridRecommendations = async (answers: any) => {
     const res = await fetch(url);
     if (!res.ok) throw new Error("Помилка алгоритму рекомендацій");
     const data = await res.json();
-    return data.results.slice(0, 9); // Повертаємо Топ-3
+    return data.results.slice(0, 9); // Повертаємо Топ
   } catch (error) {
     console.error(error);
     return [];

@@ -1,3 +1,4 @@
+export const maxDuration = 60;
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
       };
     });
 
-    // Список моделей для автопідбору. Якщо перша недоступна, сервер спробує наступну
+    // Список моделей для автопідбору
     const modelsToTry = [
       "gemini-2.5-flash",
       "gemini-2.0-flash",
@@ -36,7 +37,6 @@ export async function POST(req: Request) {
 
     for (const model of modelsToTry) {
       try {
-        // Використовуємо універсальний v1beta, який підтримує автопідбір назв
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
@@ -55,16 +55,16 @@ export async function POST(req: Request) {
           aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Пуста відповідь.";
           success = true;
           console.log(`[CineGuide AI] Успішно підключено модель: ${model}`);
-          break; // Якщо модель відповіла успішно, зупиняємо цикл
+          break; // Якщо модель відповіла успішно зупиняємо цикл
         } else {
           lastError = data.error?.message || `Помилка моделі ${model}`;
           
-          // Якщо помилка пов'язана з відсутністю моделі (404), ідемо далі за циклом
+        
           if (lastError.includes("not found") || response.status === 404) {
             console.warn(`[CineGuide AI] Модель ${model} недоступна, пробуємо наступну...`);
             continue;
           } else {
-            // Якщо помилка інша (наприклад, ліміти або неробочий ключ), повертаємо її відразу
+            // Якщо помилка інша повертаємо
             return NextResponse.json({ error: lastError }, { status: response.status });
           }
         }

@@ -1,18 +1,16 @@
-"use client"; // Додаємо цей рядок, бо тепер тут є стан (відкриття модалки)
+"use client";
 
 import { useState } from "react";
 import MovieCard from "../components/movies/MovieCard";
 import MovieRow from "../components/MovieRow";
 import RecommendationWizard from "../components/ui/RecommendationWizard";
 import PersonalizedRow from "../components/movies/PersonalizedRow";
-// Тимчасово імпортуємо React, useEffect і useState для клієнтського запиту
 import { useEffect } from "react";
 import { getTrendingMovies } from "../services/tmdb";
 
 export default function Home() {
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [movies, setMovies] = useState<any[]>([]);
-
   // Завантажуємо фільми при старті
   useEffect(() => {
     getTrendingMovies().then(data => setMovies(data));
@@ -21,7 +19,7 @@ export default function Home() {
   return (
     <main className="min-h-screen pb-20 md:pb-8 overflow-hidden">
       
-{/* Супер-компактний Hero-блок */}
+{}
       <section className="relative py-8 md:py-10 flex items-center justify-center text-center px-4 mb-4">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/10 via-[#141414] to-[#141414] z-0"></div>
         
@@ -43,16 +41,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Карусель фільмів */}
+      
       <div className="max-w-[1400px] mx-auto">
 
-{/* Гібридна персоналізована стрічка (з'явиться тільки якщо є лайки) */}
+{/*Гібридна персоналізована стрічка*/}
         <PersonalizedRow />
 
         {movies.length > 0 && (
           <MovieRow title="Популярне зараз" subtitle="Фільми, які дивляться у всьому світі">
             {movies.map((movie: any) => (
-              <div key={movie.id} className="min-w-[130px] md:min-w-[180px] flex-shrink-0 snap-start">
+              <div key={movie.id} className="min-w-[70px] md:min-w-[120px] flex-shrink-0 snap-start">
                 <MovieCard
                 id={movie.id}
                   title={movie.title || movie.name || "Без назви"}
@@ -65,12 +63,12 @@ export default function Home() {
           </MovieRow>
         )}
       </div>
-
-      {/* Якщо isWizardOpen === true, показуємо опитувальник */}
       {isWizardOpen && (
         <RecommendationWizard onClose={() => setIsWizardOpen(false)} />
       )}
 
     </main>
   );
+
+
 }
